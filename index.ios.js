@@ -5,88 +5,94 @@
  */
 
 import React, { Component } from 'react';
-import {
+import  {
     AppRegistry,
     StyleSheet,
     Text,
     View,
     Image,
+    ListView,
+    ScrollView,
+    NavigastorIOS,
+    TouchableHightlight,
 
 } from 'react-native';
 
 
-class CPICWorkshop extends Component {
+
+
+import  Header from './Header';
+import Boxtwo from './Boxtwo';
+
+var twitter = require('./twitter.json');
+
+
+
+
+class domeTwo extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {showText: true};
+
+    setInterval(() => {
+      this.setState({ showText: !this.state.showText });
+    }, 2000);
+  }
+
+
   render() {
+    let data = twitter[0];
+
+    let  users =data.activities.users;
+
+
+    let  retweet = this.state.showText ? this.props.text : data.activities.Retweet ;
+    let  likes=  twitter[0].activities.Likes;
+
+
     return (
+
         <View style={styles.constntainer}>
           <View style={styles.main}>
-
-            <View   style={styles.row}>
-
-              <Image source={{uri: 'http://lorempixel.com/100/100/cats/'}} style={{width: 40, height: 40}} />
+            <Header data={twitter[0].user}/>
 
 
-              <View style={styles.headtext}>
-                <Text style={[styles.react,styles.textColor]}>React </Text>
-                <Text style={styles.reactjs}>@reactjs</Text>
-              </View>
 
-
-              <Image source={{uri: 'https://unsplash.it/100/100/?random'}} style={{width: 40, height: 40}} />
-
-              <View style={styles.botton}>
-                <Text style={styles.bottext}>Following</Text>
-              </View>
-            </View>
 
             <View  style={styles.boxone}>
               <Text style={[styles.onetext,styles.textColor]}>
-                We just shipped v15.3.0 with React.PureComponent &react-test-renderer!（docs coming soon）
+                {data.text}
               </Text>
             </View>
 
 
-
-
-            <View style={styles.boxTwo}>
-
-              <Text> Full changelog</Text>
-              <View  style={[styles.twoMain,styles.row]}>
-                <Image source={{uri:'https://avatars0.githubusercontent.com/u/69631?v=3&s=200'}} style={{width: 90, height: 100,marginLeft:5}} />
-
-                <View  style={styles.twoTxt}>
-                  <Text>facebook/react</Text>
-                  <Text>reat-A declarative,efficient,and flexible JavaScript library for builing user interfaces</Text>
-                  <Text >github.com</Text>
-                </View>
-              </View>
-
-            </View>
+            <Boxtwo/>
 
 
 
             <View    style={[styles.boxThree,styles.row]}>
               <View style={[styles.threeLeft,styles.row]}>
                 <View  style={styles.leftOne}>
-                  <Text style={styles.threeTxt}>RETWEENS</Text>
-                  <Text style={styles.threeNum}>357</Text>
+                  <Text style={styles.threeTxt}>RETWEET</Text>
+                  <Text style={styles.threeNum}>{retweet}</Text>
                 </View>
 
                 <View  style={styles.leftOne}>
                   <Text style={styles.threeTxt}>LIKES</Text>
-                  <Text style={styles.threeNum}>461</Text>
+                  <Text style={styles.threeNum}>{likes}</Text>
                 </View>
               </View>
 
 
 
               <View  style={[styles.threeRight,styles.row]}>
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}} style={styles.threeImg } />
+
+
+
+                {users.map (function(users)  {
+                  return <Image style={styles.threeImg} source={{uri:users.avatar}}/>
+                })}
 
 
               </View>
@@ -95,24 +101,24 @@ class CPICWorkshop extends Component {
 
 
             <View style={styles.boxFour}>
-              <Text style={styles.fourTxt}>11:53 AM - 29 Jul 2016</Text>
+              <Text style={styles.fourTxt}>{data.createdAt}</Text>
             </View>
 
 
             <View style={[styles.footer,styles.row]}>
 
-              <Image source={{uri:'https://unsplash.it/100/100/?random'}}  style={styles.footerImg} />
+              <Image source={require('./icons/reply.png')}  style={styles.footerImg} />
               <View style={[styles.footerMain,styles.row]}>
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}}  style={styles.footerImg} />
-                <Text style={styles.footerNum}>357</Text>
+                <Image source={require('./icons/retweet.png')}  style={styles.footerImg} />
+                <Text style={styles.footerNum}>{retweet}</Text>
               </View>
 
               <View style={[styles.footerMain,styles.row]}>
-                <Image source={{uri:'https://unsplash.it/100/100/?random'}}  style={styles.footerImg} />
-                <Text style={styles.footerNum}>461</Text>
+                <Image source={require('./icons/heart.png')}  style={styles.footerImg} />
+                <Text style={styles.footerNum}>{likes}</Text>
               </View>
 
-              <Image source={{uri:'https://unsplash.it/100/100/?random'}}  style={{width: 20, height: 20,marginLeft:36,}} />
+              <Image source={require('./icons/more.png')}  style={{width: 20, height: 20,marginLeft:36,}} />
 
             </View>
 
@@ -131,6 +137,10 @@ class CPICWorkshop extends Component {
 }
 
 const styles = StyleSheet.create({
+  sroll:{
+    flex:1,
+
+  },
   constntainer: {
     flex: 1,
     backgroundColor: '#F5FCFF',
@@ -142,42 +152,43 @@ const styles = StyleSheet.create({
 
   main:{
     flex:1,
-    marginTop:30,
+    marginTop:60,
     marginLeft:40,
     marginRight:40,
   },
+
+  head:{
+    alignItems: 'center',
+
+  },
+
+  headtext: {
+    flex: 1,
+  },
+
+  reat: {
+    fontSize: 20,
+    fontWeight: 'bold',
+
+  },
+
+
+  reactjs: {
+    fontSize: 14,
+    color:'#8899a6'
+
+
+  },
+
+
+
 
 
   headtext:{
     flex:1,
   },
 
-  reat: {
-    fontSize:20,
-    fontWeight:'bold',
 
-  },
-
-
-  reactjs:{
-    fontSize:14,
-
-
-  },
-
-  botton:{
-    flex:1,
-    backgroundColor:'blue',
-    height:40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius:3,
-
-  },
-
-  bottext:{
-    color:'white',
-  },
 
   boxone:{
     height:60,
@@ -189,38 +200,20 @@ const styles = StyleSheet.create({
   },
 
 
-  boxTwo:{
-    marginTop:40,
 
-  },
-
-  twoMain:{
-
-    marginTop:18,
-    borderColor:'#e1e8ed',
-    borderWidth:2,
-
-  },
-
-  twoTxt:{
-    marginLeft:10,
-    marginRight:20,
-    flex:1,
-
-
-  },
 
   boxThree:{
     marginTop:18,
     borderBottomColor:'#e1e8ed' ,
     borderTopColor:'#e1e8ed' ,
-    borderWidth:2,
+    borderTopWidth:1,
+    borderBottomWidth:1,
   },
 
   threeLeft:{
     flex:3,
     borderRightColor:'#e1e8ed' ,
-    borderWidth:2,
+
   },
 
 
